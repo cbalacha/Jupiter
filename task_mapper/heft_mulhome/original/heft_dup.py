@@ -10,7 +10,7 @@ __copyright__ = "Copyright (c) 2019, Autonomous Networks Research Group. All rig
 __license__ = "GPL"
 __version__ = "2.1"
 
-import create_input
+import create_inpu
 from create_input import init
 from copy import deepcopy
 import numpy as np
@@ -190,7 +190,7 @@ class HEFT:
 
         time_slots = []
         if len(processor.time_line) == 0:
-            time_slots.append([0, 9999])
+            time_slots.append([0, 99999999])
         else:
             for i in range(len(processor.time_line)):
                 if i == 0:
@@ -200,7 +200,7 @@ class HEFT:
                         continue
                 else:
                     time_slots.append([processor.time_line[i - 1].end, processor.time_line[i].start])
-            time_slots.append([processor.time_line[len(processor.time_line) - 1].end, 9999])
+            time_slots.append([processor.time_line[len(processor.time_line) - 1].end, 99999999])
 
 
         for slot in time_slots:
@@ -308,7 +308,7 @@ class HEFT:
                 task.aft = w
                 self.processors[p].time_line.append(Duration(task.number, 0, w))
             else:
-                aft = 9999
+                aft = 99999999
                 for processor in self.processors:
                     est = self.cal_est(task, processor)
                     # logging.debug("est:", est)
