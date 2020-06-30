@@ -45,10 +45,11 @@ def plot_comm_times(comm_log, file_prefix):
     lccenc_to_score = []
     score_to_preagg = []
     preagg_to_lccdec = []
+    lccdec_to_home = []
 
     source_to_dest = ['datasource_to_master', 'master_to_resnet', 
     'resnet_to_storeclass', 'storeclass_to_lccenc', 'lccenc_to_score', 
-    'score_to_preagg', 'preagg_to_lccdec']
+    'score_to_preagg', 'preagg_to_lccdec', 'lccdec_to_home']
 
     for k, v in comm_log.items():
         if k[2].startswith('master') and k[1].startswith('datasource'):
@@ -63,8 +64,11 @@ def plot_comm_times(comm_log, file_prefix):
             lccenc_to_score.append(v)
         if k[2].startswith('score') and k[1].startswith('preagg'):
             score_to_preagg.append(v)
-        if k[2].startswith('preagg') and k[1].startswith('lccdec'):
+        if k[2].startswith('lccdec') and k[1].startswith('preagg'):
             preagg_to_lccdec.append(v)
+        if k[2].startswith('home') and k[1].startswith('lccdec'):
+            lccdec_to_home.append(v)
+
 
     for src_dst in source_to_dest:
         if not eval(src_dst):
@@ -96,14 +100,17 @@ def plot_task_timings(task_log, file_prefix):
     resnet_wait_times = []
     score_exec_times = []
     score_wait_times = []
+    storeclass_exec_times = []
+    storeclass_wait_times = []
 
     task_and_statistic = [
-        ['lccdec_exec_times', 'lccdec_wait_times'],
-        ['lccenc_exec_times', 'lccenc_wait_times'],
         ['master_exec_times', 'master_wait_times'], 
-        ['preagg_exec_times', 'preagg_wait_times'],
         ['resnet_exec_times', 'resnet_wait_times'],
-        ['score_exec_times', 'score_wait_times']
+        ['storeclass_exec_times', 'storeclass_wait_times'],
+        ['score_exec_times', 'score_wait_times'], 
+        ['lccenc_exec_times', 'lccenc_wait_times'],
+        ['preagg_exec_times', 'preagg_wait_times'],
+        ['lccdec_exec_times', 'lccdec_wait_times'],
     ]  
 
     # keys are tuples:
@@ -134,6 +141,9 @@ def plot_task_timings(task_log, file_prefix):
         if k[0].startswith('score'):
             score_exec_times.append(float(v[6]))
             score_wait_times.append(float(v[7]))
+        if k[0].startswith('storeclass'):
+            storeclass_exec_times.append(float(v[6]))
+            storeclass_wait_times.append(float(v[7]))
 
     # straggling resnet logs don't hit home. manually insert them by parsing 
     # the raw resnet8 log files
